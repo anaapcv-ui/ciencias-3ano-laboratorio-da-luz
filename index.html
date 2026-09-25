@@ -119,6 +119,25 @@
   .cor3{background:linear-gradient(120deg,#F28C38,#F7C948);}
   .cor4{background:linear-gradient(120deg,#4AA3E0,#7C5CBF);}
   .cor5{background:linear-gradient(120deg,#7C5CBF,#F28C38);}
+  /* Mapa Mental */
+  .mapa-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin:14px 0;}
+  .mm-card{background:#fff;border-radius:18px;box-shadow:var(--sombra);overflow:hidden;border:2px solid #eee;}
+  .mm-cab{padding:12px 14px;color:#fff;font-weight:bold;font-size:1.1rem;}
+  .mm-corpo{padding:12px 14px;}
+  .mm-mais{display:none;background:#FFF7DA;border-radius:10px;padding:8px 12px;margin:8px 0;font-size:.95rem;}
+  .mm-mais.mostra{display:block;}
+  .mm-central{background:linear-gradient(120deg,#FFF4CE,#DCEEFB);border:3px dashed var(--luz-esc);}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{background:var(--luz);color:#4a3a00;font-weight:bold;border-radius:20px;padding:6px 12px;font-size:.95rem;}
+  /* Verdadeiro ou Falso */
+  .vf-frase{font-size:1.3rem;font-weight:bold;text-align:center;padding:18px 10px;min-height:90px;}
+  .vf-botoes{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  .vf-btn{font-size:1.2rem;padding:14px 26px;border:none;border-radius:16px;font-weight:bold;cursor:pointer;color:#fff;font-family:inherit;}
+  .vf-v{background:#5FA84E;box-shadow:0 4px 0 #3E7A32;}
+  .vf-f{background:#E07A5F;box-shadow:0 4px 0 #b3533a;}
+  .vf-btn:disabled{opacity:.5;cursor:default;}
+  .vf-contador{text-align:center;color:var(--roxo-esc);font-weight:bold;}
+  .trofeu{font-size:4rem;}
   @media(max-width:520px){header.topo h1{font-size:1.4rem;} main{padding:12px 8px 50px;}}
 </style>
 </head>
@@ -132,9 +151,10 @@
 
 <nav class="abas" id="abas">
   <button class="ativa" data-tela="inicio">🏠 Início</button>
+  <button data-tela="mapa">🗺️ Mapa Mental</button>
   <button data-tela="leitura">📖 Leitura Guiada</button>
-  <button data-tela="quiz">🎯 Quiz</button>
   <button data-tela="resumo">🗺️ Resumo</button>
+  <button data-tela="vf">✅ Verdadeiro ou Falso</button>
   <button data-tela="simulado">📝 Simulado</button>
   <button data-tela="pais">📊 Relatório para os pais</button>
 </nav>
@@ -148,10 +168,11 @@
       Vamos visitar <b>5 estações</b> e descobrir como a luz funciona. No fim, você vai estar
       pronto para a prova de quarta! 💪</p>
       <div class="trilha">
-        <div class="passo" data-ir="leitura"><span class="n">1</span><br><b>📖 Leitura Guiada</b><br><small>Aprender lendo e clicando</small></div>
-        <div class="passo" data-ir="quiz"><span class="n">2</span><br><b>🎯 Quiz</b><br><small>Testar o que entendi</small></div>
+        <div class="passo" data-ir="mapa"><span class="n">1</span><br><b>🗺️ Mapa Mental</b><br><small>Ver tudo de uma vez</small></div>
+        <div class="passo" data-ir="leitura"><span class="n">2</span><br><b>📖 Leitura Guiada</b><br><small>Aprender lendo e clicando</small></div>
         <div class="passo" data-ir="resumo"><span class="n">3</span><br><b>🗺️ Resumo</b><br><small>Revisar rapidinho</small></div>
-        <div class="passo" data-ir="simulado"><span class="n">4</span><br><b>📝 Simulado</b><br><small>Prova de treino</small></div>
+        <div class="passo" data-ir="vf"><span class="n">4</span><br><b>✅ Verdadeiro ou Falso</b><br><small>Jogar e treinar</small></div>
+        <div class="passo" data-ir="simulado"><span class="n">5</span><br><b>📝 Simulado</b><br><small>Prova de treino</small></div>
       </div>
     </div>
     <div class="cartao">
@@ -167,7 +188,8 @@
     </div>
     <div class="cartao">
       <h2 class="titsec">Como usar este material</h2>
-      <p>Siga a trilha na ordem: <b>Leitura Guiada → Quiz → Resumo → Simulado</b>.
+      <p>Siga a trilha na ordem: <b>Mapa Mental → Leitura Guiada → Resumo → Verdadeiro ou Falso → Simulado</b>.
+      Comece pelo <b>Mapa Mental</b> para ver o assunto inteiro de uma vez.
       Na Leitura, você <b>lê cada estação e clica na resposta certa</b> — assim você fixa o que aprendeu! 🌟</p>
       <div class="painel">
         💾 <b>Seu progresso fica salvo sozinho</b> neste aparelho.
@@ -178,6 +200,28 @@
           <button class="btn pequeno" style="background:#c98a8a;box-shadow:0 4px 0 #a76a6a" onclick="zerarTudo()">🗑️ Zerar tudo</button>
         </div>
         <div id="salvo-info" style="margin-top:6px;color:#6b6478;font-size:.85rem;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MAPA MENTAL ================= -->
+  <section class="tela" id="mapa">
+    <div class="cartao">
+      <h2 class="titsec">🗺️ Mapa Mental — a luz inteirinha num olhar</h2>
+      <p>Aqui está <b>tudo</b> o que vai cair na prova, dividido em 5 partes. Leia cada cartão,
+      clique em <b>🔎 Ver mais</b> para abrir os detalhes e responda o <b>mini-quiz</b> de cada um! ✨</p>
+    </div>
+    <div class="cartao mm-central">
+      <h2 class="titsec">🔦 O caminho da luz</h2>
+      <div class="timeline" id="mm-timeline"></div>
+    </div>
+    <div class="mapa-grade" id="mapa-grade"></div>
+    <div class="cartao">
+      <h2 class="titsec">📌 Resumão da Prova</h2>
+      <p>As palavras-chave que você precisa saber:</p>
+      <div class="chips" id="mm-chips"></div>
+      <div style="text-align:center;margin-top:16px">
+        <button class="btn roxo" onclick="irPara('leitura')">Começar a Leitura Guiada 📖</button>
       </div>
     </div>
   </section>
@@ -201,24 +245,9 @@
       <h2 class="titsec" style="margin-top:18px">🔁 Para revisar</h2>
       <div id="para-revisar">Nada por aqui ainda — ótimo trabalho! 🌟</div>
       <div style="text-align:center;margin-top:14px">
-        <button class="btn roxo" onclick="irPara('quiz')">Ir para o Quiz 🎯</button>
+        <button class="btn roxo" onclick="irPara('resumo')">Ir para o Resumo 🗺️</button>
       </div>
     </div>
-  </section>
-
-  <!-- ================= QUIZ ================= -->
-  <section class="tela" id="quiz">
-    <div class="cartao">
-      <h2 class="titsec">🎯 Quiz</h2>
-      <p>12 perguntas para testar o que você aprendeu. Escolha uma resposta em cada uma
-      e depois clique em <b>Ver meu resultado</b>. 🌟</p>
-      <div class="progresso"><div id="barra-quiz"></div></div>
-    </div>
-    <div id="quiz-qs"></div>
-    <div class="cartao" style="text-align:center">
-      <button class="btn roxo" onclick="corrigirQuiz()">Ver meu resultado 🎉</button>
-    </div>
-    <div class="cartao resultado" id="quiz-resultado" style="display:none"></div>
   </section>
 
   <!-- ================= RESUMO ================= -->
@@ -244,9 +273,32 @@
       <p>Clique em cada pergunta para ver a resposta.</p>
       <div id="relampago"></div>
       <div style="text-align:center;margin-top:14px">
-        <button class="btn roxo" onclick="irPara('simulado')">Quero fazer o Simulado 📝</button>
+        <button class="btn roxo" onclick="irPara('vf')">Quero jogar verdadeiro ou falso! ✅</button>
       </div>
     </div>
+  </section>
+
+  <!-- ================= VERDADEIRO OU FALSO ================= -->
+  <section class="tela" id="vf">
+    <div class="cartao">
+      <h2 class="titsec">✅ Jogo Verdadeiro ou Falso</h2>
+      <p>Leia a frase e diga se ela é <b>verdadeira</b> ou <b>falsa</b>. A cada rodada o jogo sorteia
+      <b>12 frases</b> diferentes. Depois de responder, aparece a explicação! 🌟</p>
+      <div class="progresso"><div id="barra-vf"></div></div>
+      <div class="vf-contador" id="vf-contador"></div>
+    </div>
+    <div class="cartao" id="vf-jogo">
+      <div class="vf-frase" id="vf-frase"></div>
+      <div class="vf-botoes">
+        <button class="vf-btn vf-v" id="vf-bv" onclick="respondeVF(true)">✅ Verdadeiro</button>
+        <button class="vf-btn vf-f" id="vf-bf" onclick="respondeVF(false)">❌ Falso</button>
+      </div>
+      <div class="explica" id="vf-explica"></div>
+      <div style="text-align:center;margin-top:12px">
+        <button class="btn" id="vf-prox" style="display:none" onclick="proximaVF()">Próxima frase ➡️</button>
+      </div>
+    </div>
+    <div class="cartao resultado" id="vf-resultado" style="display:none"></div>
   </section>
 
   <!-- ================= SIMULADO ================= -->
@@ -288,7 +340,7 @@
 /* ============================================================
    ESTADO + SALVAMENTO (localStorage com try/catch + memória)
    ============================================================ */
-const CHAVE = "kit_ciencias_3ano_un8_luz_v1";
+const CHAVE = "kit_ciencias_3ano_un8_luz_v2";
 let memoria = {};
 function carregar(){
   try{ const s = localStorage.getItem(CHAVE); return s ? JSON.parse(s) : {}; }
@@ -302,7 +354,8 @@ function salvar(){
 }
 let estado = carregar();
 estado.leitura = estado.leitura || {};
-estado.quiz = estado.quiz || {resp:{}, feito:false, acertos:0, codigo:null};
+estado.mapa = estado.mapa || {resp:{}};
+estado.vf = estado.vf || {melhor:0, ultima:null, rodadas:0};
 estado.simulado = estado.simulado || {resp:{}, feito:false, acertos:0, codigo:null};
 
 /* ============================================================
@@ -466,48 +519,9 @@ const COBERTURA = [
 ];
 
 /* ============================================================
-   CONTEÚDO — QUIZ (12) e SIMULADO (25)
+   CONTEÚDO — SIMULADO (25)
    Cada questão guarda a alternativa certa pelo TEXTO (campo 'certa').
    ============================================================ */
-const QUIZ = [
- {q:"A luz é uma forma de...",
-  ops:["energia","água","comida","som"], certa:"energia",
-  exp:"A luz é uma forma de energia que viaja pelo ar, pela água e pelo vácuo."},
- {q:"A principal fonte de luz da Terra é:",
-  ops:["a Lua","o Sol","a lâmpada","a fogueira"], certa:"o Sol",
-  exp:"O Sol, que é uma estrela, é a principal fonte de luz da Terra."},
- {q:"Uma fonte de luz primária (que tem luz própria) é:",
-  ops:["a Lua","o espelho","a vela acesa","o caderno"], certa:"a vela acesa",
-  exp:"A vela acesa tem luz própria: é fonte primária. A Lua, o espelho e o caderno só refletem a luz."},
- {q:"A Lua brilha à noite porque ela:",
-  ops:["tem luz própria","reflete a luz do Sol","é feita de fogo","é uma lâmpada gigante"], certa:"reflete a luz do Sol",
-  exp:"A Lua é fonte secundária: não tem luz própria, ela reflete a luz do Sol."},
- {q:"A luz se propaga (caminha) sempre em:",
-  ops:["curvas","linha reta","círculos","ziguezague"], certa:"linha reta",
-  exp:"A luz anda sempre em linha reta; ela não faz curvas sozinha."},
- {q:"Sobre a velocidade da luz, é correto dizer que ela é:",
-  ops:["muito rápida (cerca de 300 mil km por segundo no ar)","bem lenta","sempre parada","igual à de um carro"], certa:"muito rápida (cerca de 300 mil km por segundo no ar)",
-  exp:"A luz é muito rápida: no ar percorre cerca de 300 mil km em 1 segundo."},
- {q:"O lápis dentro de um copo com água parece quebrado por causa da:",
-  ops:["refração","sombra","reflexão total","cor da água"], certa:"refração",
-  exp:"É a refração: a luz entorta ao mudar de meio (ar↔água), e vemos o lápis em outra posição."},
- {q:"Um material transparente é aquele que:",
-  ops:["deixa a luz passar e a gente vê com nitidez","não deixa a luz passar","deixa passar mas embaça a imagem","forma sombra"], certa:"deixa a luz passar e a gente vê com nitidez",
-  exp:"Transparente deixa a luz passar sem mudar o caminho: vemos com nitidez (ex.: vidro)."},
- {q:"O papel vegetal e o vidro fosco deixam a luz passar, mas embaçam a imagem. Eles são:",
-  ops:["opacos","transparentes","translúcidos","espelhos"], certa:"translúcidos",
-  exp:"Translúcidos: deixam a luz passar, mas mudam o caminho dos raios e embaçam a imagem."},
- {q:"Uma tábua de madeira não deixa a luz passar e forma sombra. Ela é um material:",
-  ops:["opaco","transparente","translúcido","refletor"], certa:"opaco",
-  exp:"Opaco: não deixa a luz passar, por isso forma sombra."},
- {q:"Conseguimos ver a nossa imagem no espelho por causa da:",
-  ops:["reflexão da luz numa superfície lisa e polida","refração","sombra","cor do espelho"], certa:"reflexão da luz numa superfície lisa e polida",
-  exp:"O espelho tem superfície lisa e polida que reflete a luz e forma a imagem."},
- {q:"O arco-íris se forma quando a luz do Sol passa por:",
-  ops:["gotinhas de água e se separa nas cores","uma parede","uma tábua de madeira","um espelho quebrado"], certa:"gotinhas de água e se separa nas cores",
-  exp:"O arco-íris aparece quando a luz do Sol atravessa gotinhas de água e se separa nas cores."}
-];
-
 const SIMULADO = [
  {q:"A luz é uma forma de energia que consegue viajar pelo ar, pela água e até:",
   ops:["pelo vácuo (espaço sem ar)","por dentro das pedras","só por fios elétricos","por lugar nenhum"], certa:"pelo vácuo (espaço sem ar)",
@@ -585,6 +599,71 @@ const SIMULADO = [
   ops:["a luz anda em linha reta e é muito rápida","a luz anda em curvas e é bem lenta","a Lua tem luz própria","o vidro é um material opaco"], certa:"a luz anda em linha reta e é muito rápida",
   exp:"A luz anda em linha reta e é muito rápida. A Lua reflete a luz e o vidro é transparente."}
 ];
+
+/* ============================================================
+   MAPA MENTAL — 5 cartões + mini-quiz + Resumão
+   ============================================================ */
+const MAPA = [
+ {id:"m1", cor:"cor1", emoji:"💡", titulo:"De onde vem a luz",
+  resumo:"A luz é uma forma de energia. A principal fonte de luz da Terra é o Sol, que é uma estrela.",
+  mais:["🔆 <b>Fonte primária</b>: tem luz própria (Sol, fogo, vela acesa, lanterna ligada).","🌙 <b>Fonte secundária</b>: não tem luz própria, só reflete a luz (a Lua).","A luz viaja pelo ar, pela água e até pelo vácuo (espaço sem ar)."],
+  q:"A Lua é uma fonte de luz...", ops:["secundária","primária"], certa:"secundária",
+  exp:"A Lua não tem luz própria: ela reflete a luz do Sol, por isso é secundária."},
+ {id:"m2", cor:"cor2", emoji:"📏", titulo:"Como a luz caminha",
+  resumo:"A luz anda sempre em linha reta e é muito rápida.",
+  mais:["No ar, a luz percorre cerca de <b>300 mil km em 1 segundo</b>.","Na água ela fica um pouquinho mais devagar.","<b>Refração</b>: a luz entorta ao mudar de meio (ar ↔ água)."],
+  q:"O lápis no copo com água parece quebrado por causa da...", ops:["refração","reflexão","sombra"], certa:"refração",
+  exp:"É a refração: a luz entorta quando passa do ar para a água."},
+ {id:"m3", cor:"cor3", emoji:"🧊", titulo:"A luz e os materiais",
+  resumo:"Cada material deixa a luz passar de um jeito: transparente, translúcido ou opaco.",
+  mais:["🔍 <b>Transparente</b>: a luz passa e vemos nítido (vidro da janela).","🌫️ <b>Translúcido</b>: a luz passa, mas a imagem embaça (papel vegetal, vidro fosco).","⬛ <b>Opaco</b>: a luz não passa e forma sombra (madeira, parede)."],
+  q:"Uma parede é um material...", ops:["opaco","transparente","translúcido"], certa:"opaco",
+  exp:"A parede não deixa a luz passar e forma sombra: é opaca."},
+ {id:"m4", cor:"cor4", emoji:"🪞", titulo:"A reflexão e os espelhos",
+  resumo:"Reflexão é quando a luz bate numa superfície e volta.",
+  mais:["Enxergamos os objetos sem luz própria porque eles <b>refletem</b> a luz.","Superfícies <b>lisas e polidas</b> formam imagens: espelho, colher de metal polida.","Água <b>calma</b> reflete a paisagem; água agitada quase não reflete."],
+  q:"Enxergamos o caderno porque ele...", ops:["reflete a luz que recebe","tem luz própria","é transparente"], certa:"reflete a luz que recebe",
+  exp:"O caderno não brilha sozinho: nós o vemos porque ele reflete a luz."},
+ {id:"m5", cor:"cor5", emoji:"🌈", titulo:"As cores e os cuidados com os olhos",
+  resumo:"A luz branca do Sol é feita de várias cores. Precisamos cuidar dos olhos.",
+  mais:["🌈 O <b>arco-íris</b> aparece quando a luz do Sol passa por gotinhas de água e se separa nas cores.","👀 Cuidados: óculos escuros no sol, não coçar os olhos, pouca tela, piscar, boa distância da TV.","📚 Ler e estudar sempre em lugar bem iluminado."],
+  q:"O arco-íris aparece quando a luz do Sol passa por...", ops:["gotinhas de água","uma parede","um espelho"], certa:"gotinhas de água",
+  exp:"A luz do Sol atravessa as gotinhas de água e se separa nas cores."}
+];
+const RESUMAO = ["Luz = energia","Sol = estrela","Fonte primária","Fonte secundária (Lua)","Linha reta","300 mil km por segundo","Refração","Transparente","Translúcido","Opaco","Sombra","Reflexão","Espelho","Arco-íris","Cuidar dos olhos"];
+
+/* ============================================================
+   JOGO VERDADEIRO OU FALSO — banco de 26 frases (14 V + 12 F)
+   ============================================================ */
+const VF = [
+ {f:"A luz é uma forma de energia.", v:true, exp:"Certo! A luz é uma forma de energia que existe no Universo."},
+ {f:"A Lua tem luz própria.", v:false, exp:"Falso! A Lua não tem luz própria: ela reflete a luz do Sol (fonte secundária)."},
+ {f:"O Sol é uma estrela e é a principal fonte de luz da Terra.", v:true, exp:"Certo! O Sol é uma estrela e a nossa principal fonte de luz."},
+ {f:"A vela acesa é uma fonte de luz secundária.", v:false, exp:"Falso! A vela acesa tem luz própria, então é fonte PRIMÁRIA."},
+ {f:"A luz consegue viajar pelo vácuo, o espaço sem ar.", v:true, exp:"Certo! Por isso a luz do Sol atravessa o espaço e chega até a Terra."},
+ {f:"A luz se propaga sempre em linha reta.", v:true, exp:"Certo! A luz anda sempre em linha reta."},
+ {f:"A luz faz curvas sozinha para contornar os objetos.", v:false, exp:"Falso! A luz não faz curvas sozinha: ela anda em linha reta."},
+ {f:"No ar, a luz percorre cerca de 300 mil quilômetros em 1 segundo.", v:true, exp:"Certo! A luz é muito rápida."},
+ {f:"Na água, a luz fica mais rápida do que no ar.", v:false, exp:"Falso! Na água a luz fica um pouquinho mais DEVAGAR do que no ar."},
+ {f:"O lápis dentro do copo com água parece quebrado por causa da refração.", v:true, exp:"Certo! A luz entorta ao passar do ar para a água: é a refração."},
+ {f:"Refração é quando a luz bate numa superfície e volta.", v:false, exp:"Falso! Isso é a REFLEXÃO. Refração é a luz entortar ao mudar de meio (ar ↔ água)."},
+ {f:"Através de um material transparente, como o vidro da janela, vemos com nitidez.", v:true, exp:"Certo! O transparente deixa a luz passar sem mudar o caminho."},
+ {f:"O papel vegetal é um material opaco.", v:false, exp:"Falso! O papel vegetal deixa a luz passar, mas embaça a imagem: é TRANSLÚCIDO."},
+ {f:"O material translúcido deixa a luz passar, mas a imagem fica embaçada.", v:true, exp:"Certo! Exemplos: papel vegetal, vidro fosco, cortina fina."},
+ {f:"A parede é um material transparente.", v:false, exp:"Falso! A parede não deixa a luz passar: é OPACA."},
+ {f:"Os materiais opacos não deixam a luz passar e formam sombra.", v:true, exp:"Certo! Madeira, parede e tecido grosso são opacos."},
+ {f:"Conseguimos ver o caderno porque ele reflete a luz que recebe.", v:true, exp:"Certo! O caderno não tem luz própria: nós o vemos pela reflexão."},
+ {f:"O espelho forma imagens porque tem luz própria.", v:false, exp:"Falso! O espelho não tem luz própria: a superfície lisa e polida dele REFLETE a luz."},
+ {f:"Uma colher de metal bem polida pode funcionar como um espelho.", v:true, exp:"Certo! Metal bem polido reflete a luz e forma imagens."},
+ {f:"Na água agitada, com ondinhas, o reflexo da paisagem fica mais nítido.", v:false, exp:"Falso! A água CALMA e lisa reflete bem; a agitada quase não reflete."},
+ {f:"A luz branca do Sol é formada por várias cores juntas.", v:true, exp:"Certo! Por isso o arco-íris tem tantas cores."},
+ {f:"O arco-íris se forma quando a luz do Sol passa por gotinhas de água.", v:true, exp:"Certo! A luz se separa nas cores ao atravessar as gotinhas."},
+ {f:"Ficar muitas horas seguidas na tela do celular faz bem para os olhos.", v:false, exp:"Falso! Muitas horas de tela fazem mal aos olhos."},
+ {f:"Ler e estudar em um lugar bem iluminado ajuda a cuidar dos olhos.", v:true, exp:"Certo! Boa luz para ler protege os olhos."},
+ {f:"O vidro da janela é um material translúcido.", v:false, exp:"Falso! Pelo vidro da janela vemos com nitidez: ele é TRANSPARENTE."},
+ {f:"O arco-íris aparece à noite, quando não tem sol.", v:false, exp:"Falso! O arco-íris precisa da luz do Sol passando por gotinhas de água."}
+];
+const VF_POR_RODADA = 12;
 
 /* ============================================================
    RESUMO — caminho da luz, glossário, dicas, relâmpago
@@ -775,59 +854,6 @@ function atualizaParaRevisar(){
 }
 
 /* ============================================================
-   RENDER — QUIZ
-   ============================================================ */
-function renderQuiz(){
-  const cont=document.getElementById('quiz-qs'); cont.innerHTML='';
-  QUIZ.forEach((q,qi)=>{
-    const ordem=embaralhaOps(q.ops,'quiz'+qi+q.q);
-    const escolha=estado.quiz.resp[qi];
-    let ops='';
-    ordem.forEach((o,pos)=>{
-      const marc = escolha===o.t ? 'marcada':'';
-      ops+=`<button class="opcao ${marc}" data-qi="${qi}" data-txt="${encodeURIComponent(o.t)}" onclick="escolheQuiz(${qi},'${encodeURIComponent(o.t)}',this)">
-        <span class="letra">${LETRAS[pos]}</span>${o.t}</button>`;
-    });
-    cont.innerHTML+=`<div class="q-card" id="quiz-c-${qi}">
-      <div class="q-enunciado">${qi+1}. ${q.q}</div>${ops}
-      <div class="explica" id="quiz-e-${qi}"></div></div>`;
-  });
-  atualizaBarra('quiz');
-}
-function escolheQuiz(qi,txtEnc,el){
-  if(estado.quiz.feito) return;
-  const txt=decodeURIComponent(txtEnc);
-  estado.quiz.resp[qi]=txt; salvar();
-  const card=document.getElementById('quiz-c-'+qi);
-  card.querySelectorAll('.opcao').forEach(o=>o.classList.remove('marcada'));
-  el.classList.add('marcada');
-  atualizaBarra('quiz');
-}
-function corrigirQuiz(){
-  const naoResp=QUIZ.filter((q,i)=>!estado.quiz.resp[i]).length;
-  if(naoResp>0){ modal("Falta pouco! 😊","Ainda faltam "+naoResp+" pergunta(s) sem resposta. Responda todas para ver o resultado."); return; }
-  let acertos=0;
-  QUIZ.forEach((q,qi)=>{
-    const card=document.getElementById('quiz-c-'+qi);
-    const esc=estado.quiz.resp[qi];
-    card.querySelectorAll('.opcao').forEach(o=>{
-      const txt=decodeURIComponent(o.dataset.txt);
-      o.onclick=null;
-      if(txt===q.certa) o.classList.add('correta');
-      else if(txt===esc) o.classList.add('errada');
-    });
-    if(esc===q.certa) acertos++;
-    const e=document.getElementById('quiz-e-'+qi);
-    e.classList.add('mostra');
-    e.innerHTML = (esc===q.certa?'✅ <b>Acertou!</b> ':'❌ <b>A resposta certa é:</b> '+q.certa+'. ')+q.exp;
-  });
-  estado.quiz.feito=true; estado.quiz.acertos=acertos;
-  if(!estado.quiz.codigo) estado.quiz.codigo=gerarCodigo('MED',acertos);
-  salvar();
-  mostraResultado('quiz',acertos,QUIZ.length);
-}
-
-/* ============================================================
    RENDER — SIMULADO
    ============================================================ */
 function renderSimulado(){
@@ -896,7 +922,7 @@ function mensagemFaixa(pct){
 function mostraResultado(tipo,acertos,total){
   const pct=Math.round(acertos/total*100);
   const est=estado[tipo];
-  const alvo=document.getElementById((tipo==='quiz'?'quiz':'sim')+'-resultado');
+  const alvo=document.getElementById('sim-resultado');
   let estrelas=''; const nEst=Math.round(pct/20); for(let i=0;i<5;i++) estrelas+= i<nEst?'⭐':'☆';
   alvo.style.display='block';
   alvo.innerHTML=`
@@ -912,11 +938,112 @@ function mostraResultado(tipo,acertos,total){
   atualizaBarra(tipo);
 }
 function atualizaBarra(tipo){
-  const arr = tipo==='quiz'?QUIZ:SIMULADO;
+  const arr = SIMULADO;
   const est = estado[tipo];
   const n = Object.keys(est.resp).filter(k=>est.resp[k]).length;
   const barra=document.getElementById('barra-'+tipo);
   if(barra) barra.style.width=Math.round(n/arr.length*100)+'%';
+}
+
+/* ============================================================
+   MAPA MENTAL render
+   ============================================================ */
+function renderMapa(){
+  document.getElementById('mm-timeline').innerHTML=TIMELINE.map(e=>`<div class="evento"><span class="ano">${e[0]}</span><br>${e[1]}</div>`).join('');
+  document.getElementById('mm-chips').innerHTML=RESUMAO.map(c=>`<span class="chip">${c}</span>`).join('');
+  const g=document.getElementById('mapa-grade'); g.innerHTML='';
+  MAPA.forEach(c=>{
+    const esc=estado.mapa.resp[c.id];
+    const ordem=embaralhaOps(c.ops,'mapa'+c.id+c.q);
+    let ops='';
+    ordem.forEach((o,pos)=>{
+      let cls='opcao';
+      if(esc){ if(o.t===c.certa) cls+=' correta'; else if(o.t===esc) cls+=' errada'; }
+      ops+=`<button class="${cls}" onclick="respondeMapa('${c.id}','${encodeURIComponent(o.t)}')"><span class="letra">${LETRAS[pos]}</span>${o.t}</button>`;
+    });
+    const fb = esc ? `<div class="explica mostra">${esc===c.certa?'✅ <b>Acertou!</b> ':'❌ <b>A resposta certa é:</b> '+c.certa+'. '}${c.exp}</div>` : '';
+    g.innerHTML+=`<div class="mm-card">
+      <div class="mm-cab ${c.cor}">${c.emoji} ${c.titulo}</div>
+      <div class="mm-corpo">
+        <p>${c.resumo}</p>
+        <button class="btn pequeno sol" onclick="document.getElementById('mais-${c.id}').classList.toggle('mostra')">🔎 Ver mais</button>
+        <div class="mm-mais" id="mais-${c.id}"><ul>${c.mais.map(m=>'<li>'+m+'</li>').join('')}</ul></div>
+        <div class="pergunta"><div class="rotulo">⚡ Mini-quiz: ${c.q}</div>${ops}${fb}</div>
+      </div></div>`;
+  });
+}
+function respondeMapa(id,txtEnc){
+  if(estado.mapa.resp[id]) return;
+  estado.mapa.resp[id]=decodeURIComponent(txtEnc);
+  salvar(); renderMapa();
+}
+
+/* ============================================================
+   VERDADEIRO OU FALSO — jogo
+   ============================================================ */
+let rodadaVF=null;
+function sorteiaRodada(){
+  const embar=a=>{ const b=a.slice(); for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; };
+  const vs=embar(VF.filter(x=>x.v)).slice(0,VF_POR_RODADA/2);
+  const fs=embar(VF.filter(x=>!x.v)).slice(0,VF_POR_RODADA/2);
+  return embar(vs.concat(fs));
+}
+function novaRodadaVF(){
+  rodadaVF={frases:sorteiaRodada(), atual:0, acertos:0, respondeu:false};
+  document.getElementById('vf-jogo').style.display='block';
+  document.getElementById('vf-resultado').style.display='none';
+  mostraFraseVF();
+}
+function mostraFraseVF(){
+  const r=rodadaVF; const fr=r.frases[r.atual];
+  document.getElementById('vf-frase').textContent='“'+fr.f+'”';
+  document.getElementById('vf-contador').textContent='Frase '+(r.atual+1)+' de '+r.frases.length+' • Acertos: '+r.acertos;
+  document.getElementById('barra-vf').style.width=Math.round(r.atual/r.frases.length*100)+'%';
+  const ex=document.getElementById('vf-explica'); ex.classList.remove('mostra'); ex.innerHTML='';
+  document.getElementById('vf-bv').disabled=false; document.getElementById('vf-bf').disabled=false;
+  document.getElementById('vf-prox').style.display='none';
+  r.respondeu=false;
+}
+function respondeVF(resp){
+  const r=rodadaVF; if(!r||r.respondeu) return;
+  r.respondeu=true;
+  const fr=r.frases[r.atual]; const certo=(resp===fr.v);
+  if(certo) r.acertos++;
+  const ex=document.getElementById('vf-explica');
+  ex.innerHTML=(certo?'🎉 <b>Você acertou!</b> ':'🤔 <b>Não foi dessa vez.</b> A frase é <b>'+(fr.v?'VERDADEIRA':'FALSA')+'</b>. ')+fr.exp;
+  ex.classList.add('mostra');
+  document.getElementById('vf-bv').disabled=true; document.getElementById('vf-bf').disabled=true;
+  const pb=document.getElementById('vf-prox');
+  pb.textContent = r.atual+1<r.frases.length ? 'Próxima frase ➡️' : 'Ver meu placar 🏆';
+  pb.style.display='inline-block';
+  document.getElementById('vf-contador').textContent='Frase '+(r.atual+1)+' de '+r.frases.length+' • Acertos: '+r.acertos;
+}
+function proximaVF(){
+  const r=rodadaVF;
+  if(r.atual+1<r.frases.length){ r.atual++; mostraFraseVF(); return; }
+  fimRodadaVF();
+}
+function fimRodadaVF(){
+  const r=rodadaVF; const total=r.frases.length; const pct=Math.round(r.acertos/total*100);
+  estado.vf.rodadas=(estado.vf.rodadas||0)+1;
+  estado.vf.ultima=r.acertos;
+  if(r.acertos>(estado.vf.melhor||0)) estado.vf.melhor=r.acertos;
+  salvar();
+  document.getElementById('barra-vf').style.width='100%';
+  let est=''; const n=Math.round(pct/20); for(let i=0;i<5;i++) est+= i<n?'⭐':'☆';
+  document.getElementById('vf-jogo').style.display='none';
+  const alvo=document.getElementById('vf-resultado'); alvo.style.display='block';
+  alvo.innerHTML=`<div class="trofeu">${pct>=70?'🏆':'🎈'}</div>
+    <div class="estrelas" style="font-size:1.8rem">${est}</div>
+    <div class="nota">${r.acertos} / ${total}</div>
+    <p>Você acertou <b>${pct}%</b>! ${mensagemFaixa(pct)}</p>
+    <p>🥇 Seu melhor placar: <b>${estado.vf.melhor} / ${total}</b></p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn sol" onclick="novaRodadaVF()">🔄 Jogar de novo</button>
+      <button class="btn roxo" onclick="irPara('simulado')">Quero fazer o Simulado 📝</button>
+    </div>`;
+  document.getElementById('vf-contador').textContent='Rodada terminada!';
+  alvo.scrollIntoView({behavior:'smooth'});
 }
 
 /* ============================================================
@@ -946,12 +1073,11 @@ function renderFimLeitura(){
 }
 
 /* ============================================================
-   RELATÓRIO PARA OS PAIS (PAIS-77 / MED / SIM)
+   RELATÓRIO PARA OS PAIS (PAIS-77 / SIM)
    ============================================================ */
 function abrirPais(){
   const cod=(document.getElementById('cod-pais').value||'').trim().toUpperCase();
   const validos=['PAIS-77'];
-  if(estado.quiz.codigo) validos.push(estado.quiz.codigo);
   if(estado.simulado.codigo) validos.push(estado.simulado.codigo);
   if(validos.includes(cod)){
     document.getElementById('cadeado-pais').style.display='none';
@@ -975,15 +1101,21 @@ function renderRelatorio(){
       }
     });
   });
+  const mmResp=MAPA.filter(c=>estado.mapa.resp[c.id]).length;
+  const mmAc=MAPA.filter(c=>estado.mapa.resp[c.id]===c.certa).length;
   let html=`<div class="rel-mat">
+    <h4>🗺️ Mapa Mental</h4>
+    Mini-quiz respondidos: <b>${mmResp} de ${MAPA.length}</b> • acertos: <b>${mmAc}</b>
+  </div>`;
+  html+=`<div class="rel-mat">
     <h4>📖 Leitura Guiada</h4>
     Estações concluídas: <b>${blocosOk} de ${BLOCOS.length}</b><br>
     Perguntas de fixação acertadas: <b>${acertosLeit} de ${totalPerg}</b>
     ${erros.length?'<br>Perguntas erradas:<ul>'+erros.map(v=>'<li>'+v+'</li>').join('')+'</ul>':''}
   </div>`;
   html+=`<div class="rel-mat">
-    <h4>🎯 Quiz</h4>
-    ${estado.quiz.feito?`Resultado: <b>${estado.quiz.acertos} de ${QUIZ.length}</b> (${Math.round(estado.quiz.acertos/QUIZ.length*100)}%)<br>Código: <b>${estado.quiz.codigo}</b>`:'Ainda não foi feito.'}
+    <h4>✅ Verdadeiro ou Falso</h4>
+    ${estado.vf.rodadas?`Rodadas jogadas: <b>${estado.vf.rodadas}</b><br>Melhor placar: <b>${estado.vf.melhor} de ${VF_POR_RODADA}</b> (${Math.round(estado.vf.melhor/VF_POR_RODADA*100)}%)<br>Última rodada: <b>${estado.vf.ultima} de ${VF_POR_RODADA}</b>`:'Ainda não jogou.'}
   </div>`;
   html+=`<div class="rel-mat">
     <h4>📝 Simulado</h4>
@@ -1048,28 +1180,28 @@ function fecharModal(){ const m=document.getElementById('modal-kit'); if(m) m.re
    INÍCIO
    ============================================================ */
 function iniciar(){
+  renderMapa();
   renderLeitura();
-  renderQuiz();
   renderResumo();
+  novaRodadaVF();
   renderSimulado();
   renderFimLeitura();
-  if(estado.quiz.feito){ setTimeout(()=>reexibeCorrigido('quiz'),50); }
   if(estado.simulado.feito){ setTimeout(()=>reexibeCorrigido('simulado'),50); }
   atualizaParaRevisar();
   const info=document.getElementById('salvo-info');
   if(info) info.textContent='Seu progresso é salvo automaticamente neste aparelho.';
 }
 function reexibeCorrigido(tipo){
-  const arr=tipo==='quiz'?QUIZ:SIMULADO;
+  const arr=SIMULADO;
   arr.forEach((q,qi)=>{
-    const card=document.getElementById((tipo==='quiz'?'quiz':'sim')+'-c-'+qi); if(!card) return;
+    const card=document.getElementById('sim-c-'+qi); if(!card) return;
     const esc=estado[tipo].resp[qi];
     card.querySelectorAll('.opcao').forEach(o=>{
       const txt=decodeURIComponent(o.dataset.txt); o.onclick=null;
       if(txt===q.certa) o.classList.add('correta');
       else if(txt===esc) o.classList.add('errada');
     });
-    const e=document.getElementById((tipo==='quiz'?'quiz':'sim')+'-e-'+qi);
+    const e=document.getElementById('sim-e-'+qi);
     if(e){ e.classList.add('mostra'); e.innerHTML=(esc===q.certa?'✅ <b>Acertou!</b> ':'❌ <b>A resposta certa é:</b> '+q.certa+'. ')+q.exp; }
   });
   mostraResultado(tipo,estado[tipo].acertos,arr.length);
